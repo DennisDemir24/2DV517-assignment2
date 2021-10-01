@@ -1,5 +1,3 @@
 # 2DV517-assignment2
 
-Check twoo
-
-Julia :)
+This is assignment 2 for the course 2dv517.
