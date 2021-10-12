@@ -23,7 +23,7 @@ clouds:
     
       password: "MySecretPasswordWhoopWhoop"
     
-      project_id: 3505b00815024d79a8da6d33133f302f
+      project_id: AInterestingHashCode
     
       project_name: "username-2dv517-ht21"
     
