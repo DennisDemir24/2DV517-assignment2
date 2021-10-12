@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  vars_files:
+  # File which holds the variables used
+   - ./vars/all

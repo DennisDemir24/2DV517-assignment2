@@ -1,16 +1,19 @@
 ---
 - hosts: localhost
+  vars_files:
+  # File which holds the variables used
+   - ./vars/all
   tasks:
   # Create SSH groups, specifying cloud, naming the group and setting state
     - name: Create SSH group
       os_security_group:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: SSH
         state: present
   # Create SSH groups rules, specifying cloud, choosing protocol, port range and which group that owns it
     - name: Create rules for SSH group
       os_security_group_rule:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         protocol: tcp
         port_range_min: 22
         port_range_max: 22
@@ -18,13 +21,13 @@
   # Create HTTP groups, specifying cloud, naming the group and setting state
     - name: Create HTTP group
       os_security_group:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: HTTP
         state: present
   # Create HTTP groups rules, specifying cloud, choosing protocol, port range and which group that owns it
     - name: Create rules for HTTP group
       os_security_group_rule:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         protocol: tcp
         port_range_min: 80
         port_range_max: 80

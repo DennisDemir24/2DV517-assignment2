@@ -1,9 +1,12 @@
 ---
 - hosts: localhost
+  vars_files:
+  # File which holds the variables used
+   - ./vars/all
   tasks:
   # Remove HTTP group, specifying cloud, naming the group and setting state
     - name: Remove SSH group
       os_security_group:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: HTTP
         state: absent

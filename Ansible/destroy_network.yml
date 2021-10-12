@@ -1,24 +1,25 @@
 ---
 - hosts: localhost
   vars_files:
-   - ~/2dv517/vars/all
+  # File which holds the variables used
+   - ./vars/all
   tasks:
   # Reverse order from the creation playbook, removing all the unneeded information
   # from the equation(cidr range, interfaces etc is not needed to destroy the networks) and setting state to absent
     - name: Destroy Router
       os_router:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: "{{ base }}-net"
         state: absent
     - name: Destroy SubNet
       os_subnet:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: "{{ base }}-subnet"
         network_name: "{{ base }}-net"
         state: absent
     - name: Destroy Network
       os_network:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: "{{ base }}-net"
         state: absent  
 

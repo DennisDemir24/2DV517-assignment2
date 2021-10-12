@@ -2,19 +2,19 @@
 - hosts: localhost
   vars_files:
   # File which holds the variables used
-   - ~/2dv517/vars/all
+   - ./vars/all
   tasks:
   # Creating the network, naming it, specifying which of the clouds in the clouds.yaml file to use and setting state to present.
     - name: Create Network
       os_network:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: "{{ base }}-net"
         state: present  
   # Creating the subnet, naming it, specifying which cloud in the clouds.yaml to use.
   # Specifying which network it is connected too, cidr range and dns_name servers, setting state to present.
     - name: Create SubNet
       os_subnet:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: "{{ base }}-subnet"
         network_name: "{{ base }}-net"
         cidr: "{{ cidr_range }}"
@@ -26,7 +26,7 @@
   # Also setting the state to present.
     - name: Create Router
       os_router:
-        cloud: openstack
+        cloud: "{{ cloud }}"
         name: "{{ base }}-net"
         network: public
         interfaces:
