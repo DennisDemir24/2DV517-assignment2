@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  tasks:
+  # Remove SSH groups, specifying cloud, naming the group and setting state
+    - name: Remove SSH group
+      os_security_group:
+        cloud: openstack
+        name: SSH
+        state: absent
