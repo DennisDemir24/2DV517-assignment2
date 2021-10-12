@@ -12,15 +12,27 @@ How to correctly set up sourcing of the rc file etc:
     It should look something like this:
 
 clouds:
+    
   openstack:
+    
     auth:
+    
       auth_url: https://cscloud.lnu.se:5000/v3
+    
       username: "username-2dv517"
+    
       password: "MySecretPasswordWhoopWhoop"
+    
       project_id: 3505b00815024d79a8da6d33133f302f
+    
       project_name: "username-2dv517-ht21"
+    
       user_domain_name: "Default"
+    
       project_domain_name: "Default"
+    
     region_name: "RegionOne"
+    
     interface: "public"
+    
     identity_api_version: 3
