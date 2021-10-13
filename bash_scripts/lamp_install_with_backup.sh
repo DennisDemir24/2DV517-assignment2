@@ -126,8 +126,8 @@ if grep grep wp_version /var/www/html/public_html/wp-includes/version.php > /dev
 else
   # Create database and database user for WP to use
   sudo mysql -u root -p$root_user_password -e "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
-  sudo mysql -u root -p$root_user_password -e "create user 'wordpress'@'localhost' identified by 'wordpress'";
-  sudo mysql -u root -p$root_user_password -e "grant all privileges on wordpress.* to wordpress@localhost;"
+  sudo mysql -u root -p$root_user_password -e "CREATE USER 'wordpress'@'localhost' IDENTIFIED BY 'wordpress'";
+  sudo mysql -u root -p$root_user_password -e "GRANT ALL PRIVILEGES ON wordpress.* TO wordpress@localhost;"
 
   # sudo mysql -u root -p$root_user_password -e "GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY '$wordpressuser_password';"
   sudo mysql -u root -p$root_user_password -e "FLUSH PRIVILEGES;"
