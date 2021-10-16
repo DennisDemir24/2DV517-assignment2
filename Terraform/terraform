@@ -1,0 +1,13 @@
+# IMPORTANT! Rename this file to terraform.tfvars
+
+# Openstack username
+openstack_username = "yourvaluehere"
+
+# Openstack password
+openstack_password = "yourvaluehere"
+
+# Public key content (ssh-rsa QWERTYetcetc..."
+openstack_pubkey = "yourvaluehere"
+
+# Keypair name (xx000xx-2dv517)
+openstack_keypair_name = "yourvaluehere"
