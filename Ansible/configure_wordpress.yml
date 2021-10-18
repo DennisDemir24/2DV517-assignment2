@@ -1,0 +1,13 @@
+---
+- hosts: wordpress
+  vars_files:
+  # File which holds the variables used
+   - ./vars/ips.yml
+   - ./vars/all
+  user: ubuntu
+  become: yes
+  tasks:
+    - name: Update all installed packages.
+      apt:
+        name: "*"
+        state: latest

@@ -2,4 +2,22 @@
 - hosts: localhost
   vars_files:
   # File which holds the variables used
+   - ./vars/ips.yml
    - ./vars/all
+  tasks:
+    - name: Create Wordpress servers
+      os_server:
+        cloud: "{{ cloud }}"
+        availability_zone: Education
+        name: "wordpress_{{ item }}"
+        flavor: c1-r1-d10
+        network: "{{ base }}-net"
+        image: Ubuntu server 20.04
+        key_name: "{{ key_name }}"
+        security_groups:
+          - SSH
+        floating_ips:
+          - "{{ item }}"
+        state: present
+      loop: "{{ ips_wordpress }}"
+

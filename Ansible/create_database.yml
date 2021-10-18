@@ -2,4 +2,21 @@
 - hosts: localhost
   vars_files:
   # File which holds the variables used
+   - ./vars/ips.yml
    - ./vars/all
+  tasks:
+    - name: Create database servers
+      os_server:
+        cloud: "{{ cloud }}"
+        availability_zone: Education
+        name: database_{{ item }}
+        flavor: c1-r1-d40
+        network: "{{ base }}-net"
+        image: Ubuntu server 20.04
+        key_name: "{{ key_name }}"
+        security_groups:
+          - SSH
+        floating_ips:
+          - "{{ item }}"
+        state: present
+      loop: "{{ ips_database }}"
