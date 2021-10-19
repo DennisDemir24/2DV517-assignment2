@@ -9,12 +9,18 @@ resource "openstack_networking_network_v2" "network_1" {
 resource "openstack_networking_subnet_v2" "subnet_1" {
   network_id = openstack_networking_network_v2.network_1.id
   cidr       = "192.168.20.0/24"
+  depends_on = [
+    openstack_networking_network_v2.network_1
+  ]
 }
 
 resource "openstack_networking_router_v2" "router_1" {
   name                = "AcmeRouter"
   admin_state_up      = true
   external_network_id = "fd401e50-9484-4883-9672-a2814089528c"
+  depends_on = [
+    openstack_networking_subnet_v2.subnet_1
+  ]
 }
 
 resource "openstack_networking_router_interface_v2" "router_interface_1" {

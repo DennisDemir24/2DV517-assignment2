@@ -11,12 +11,17 @@ resource "openstack_compute_instance_v2" "ac" {
   security_groups = [ "SSH" ]
   count = 1
 
+  depends_on = [
+    openstack_networking_router_v2.router_1
+  ]
+
   network {
     name = "AcmeLAN"
+    fixed_ip_v4 = "192.168.20.10"
   }
 
 # This doesn't work
-  provisioner "remote-exec" {
+  /*provisioner "remote-exec" {
     inline = [
       "sudo touch helloworld.md"
     ]
@@ -29,6 +34,7 @@ resource "openstack_compute_instance_v2" "ac" {
     host        = "${openstack_compute_instance_v2.ac[0].access_ip_v4}"
     }
   }
+  */
 }
 
 # TODO: look into some form of loop to proof against other amounts of instances!
@@ -59,7 +65,7 @@ resource "local_file" "hosts" {
   ansible_python_interpreter=/usr/bin/python3"
   EOT
   # filename = "${openstack_compute_instance_v2.ac[0].access_ip_v4}:./etc/ansible/hosts"
-  filename = "hosts"
+  filename = "../Ansible/inventory"
 }
 
 # Load balancer (?)
@@ -72,8 +78,13 @@ resource "openstack_compute_instance_v2" "lb" {
   security_groups = [ "SSHHTML" ]
   count = 1
 
+  depends_on = [
+    openstack_networking_router_v2.router_1
+  ]
+
   network {
     name = "AcmeLAN"
+    fixed_ip_v4 = "192.168.20.11"
   }
 }
 
@@ -87,9 +98,15 @@ resource "openstack_compute_instance_v2" "wp" {
   count = 3
   security_groups = [ "SSHHTML" ]
 
+  depends_on = [
+    openstack_networking_router_v2.router_1
+  ]
+
   network {
     name = "AcmeLAN"
+    fixed_ip_v4 = "192.168.20.${count.index + 20}"
   }
+
 }
 
 # 2 Db servers (master-slave replication ?)
@@ -102,8 +119,13 @@ resource "openstack_compute_instance_v2" "db" {
   count = 2
   security_groups = [ "SSH" ]
 
+  depends_on = [
+    openstack_networking_router_v2.router_1
+  ]
+
   network {
     name = "AcmeLAN"
+    fixed_ip_v4 = "192.168.20.${count.index + 30}"
   }
 }
 
@@ -117,8 +139,13 @@ resource "openstack_compute_instance_v2" "fs" {
   count = 1
   security_groups = [ "SSH" ]
 
+  depends_on = [
+    openstack_networking_router_v2.router_1
+  ]
+
   network {
     name = "AcmeLAN"
+    fixed_ip_v4 = "192.168.20.40"
   }
 }
 
