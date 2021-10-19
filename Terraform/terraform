@@ -11,3 +11,6 @@ openstack_pubkey = "yourvaluehere"
 
 # Keypair name (xx000xx-2dv517)
 openstack_keypair_name = "yourvaluehere"
+
+# Private key file (path/to/file.pem)
+ssh_key_private = "yourvaluehere"

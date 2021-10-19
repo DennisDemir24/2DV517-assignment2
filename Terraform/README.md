@@ -1,8 +1,16 @@
 # Terraform
 
-WIP!
- 
-Install instructions:
+*WIP!*
+
+## Using Terraform:
+
+1. Rename *terraform* to *terraform.tfvars*
+2. Replace values in *terraform.tfvars* with your own
+3. Install terraform (see below)
+4. Run <code>terraform plan</code> to check for errors
+5. Run <code>terraform apply</code> when ready to deploy
+
+## Install instructions (Linux):
 
     TRELEASE=0.14.7
     
@@ -15,11 +23,3 @@ Install instructions:
     mkdir Terraform
     
     cd Terraform
-
-Using Terraform:
-
-1. Rename terraform to terraform.tfvars
-2. Replace values in terraform.tfvars with your own
-3. Install terraform
-4. Run terraform plan to check for errors
-5. Run terraform apply when ready to deploy

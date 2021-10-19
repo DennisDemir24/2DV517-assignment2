@@ -17,3 +17,8 @@ variable "openstack_keypair_name" {
   type = string
   description = "Your openstack keypair name"
 }
+
+variable "ssh_key_private" {
+  type = any
+  description = "ssh pem file"
+}
