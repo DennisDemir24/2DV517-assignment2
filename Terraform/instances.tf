@@ -79,7 +79,8 @@ resource "openstack_compute_instance_v2" "lb" {
   count = 1
 
   depends_on = [
-    openstack_networking_router_v2.router_1
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.wp[0]
   ]
 
   network {
@@ -99,7 +100,8 @@ resource "openstack_compute_instance_v2" "wp" {
   security_groups = [ "SSHHTML" ]
 
   depends_on = [
-    openstack_networking_router_v2.router_1
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.db[0]
   ]
 
   network {
@@ -120,7 +122,8 @@ resource "openstack_compute_instance_v2" "db" {
   security_groups = [ "SSH" ]
 
   depends_on = [
-    openstack_networking_router_v2.router_1
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.fs
   ]
 
   network {
@@ -140,7 +143,8 @@ resource "openstack_compute_instance_v2" "fs" {
   security_groups = [ "SSH" ]
 
   depends_on = [
-    openstack_networking_router_v2.router_1
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.lb
   ]
 
   network {
@@ -152,20 +156,36 @@ resource "openstack_compute_instance_v2" "fs" {
 # Set floating IP to the LB server
 resource "openstack_networking_floatingip_v2" "fip_1" {
   pool = "public"
+  depends_on = [
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.lb
+  ]
 }
 
 resource "openstack_compute_floatingip_associate_v2" "fip_1" {
   floating_ip = openstack_networking_floatingip_v2.fip_1.address
   instance_id = openstack_compute_instance_v2.lb[0].id
+  depends_on = [
+    openstack_networking_floatingip_v2.fip_1,
+    openstack_compute_instance_v2.lb
+  ]
 }
 
 # Set floating IP to the AC server
 resource "openstack_networking_floatingip_v2" "fip_2" {
   pool = "public"
+  depends_on = [
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.ac
+  ]
 }
 
 resource "openstack_compute_floatingip_associate_v2" "fip_2" {
   floating_ip = openstack_networking_floatingip_v2.fip_2.address
   instance_id = openstack_compute_instance_v2.ac[0].id
+  depends_on = [
+    openstack_networking_floatingip_v2.fip_2,
+    openstack_compute_instance_v2.ac
+  ]
 }
 
