@@ -38,11 +38,15 @@ resource "openstack_compute_instance_v2" "ac" {
 }
 
 # TODO: look into some form of loop to proof against other amounts of instances!
-resource "local_file" "hosts" {
+resource "local_file" "inventory" {
+
+  depends_on = [
+    openstack_compute_floatingip_associate_v2.fip_3
+  ]
   content = <<EOT
 
   [ac server]
-  lb ansible_host=${openstack_compute_instance_v2.ac[0].access_ip_v4}
+  ac ansible_host=${openstack_networking_floatingip_v2.fip_2.address}
 
   [nginx]
   lb ansible_host=${openstack_compute_instance_v2.lb[0].access_ip_v4}
@@ -60,6 +64,25 @@ resource "local_file" "hosts" {
 
   [fileserver]
   fs ansible_host=${openstack_compute_instance_v2.fs[0].access_ip_v4}
+
+  [prometheus]
+  prom ansible_host=${openstack_compute_instance_v2.fs[0].access_ip_v4}
+
+  [nginx:vars]
+  ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
+
+  [wordpress:vars]
+  ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
+
+  [databaseMS:vars]
+  ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
+
+  [databaseSL:vars]
+  ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
+
+  [fileserver:vars]
+  ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
+
 
   [all:vars]
   ansible_python_interpreter=/usr/bin/python3"
@@ -144,7 +167,7 @@ resource "openstack_compute_instance_v2" "fs" {
 
   depends_on = [
     openstack_networking_router_v2.router_1,
-    openstack_compute_instance_v2.lb
+    openstack_compute_instance_v2.ac
   ]
 
   network {
@@ -153,12 +176,33 @@ resource "openstack_compute_instance_v2" "fs" {
   }
 }
 
+# Prometheus/Grafana server 
+resource "openstack_compute_instance_v2" "prom" {
+  name      = "AcmePrometheus_${count.index}"
+  image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
+  flavor_name = "c1-r1-d10"
+  key_pair  = var.openstack_keypair_name
+  availability_zone = "Education"
+  security_groups = [ "SSHHTML" ]
+  count = 1
+
+  depends_on = [
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.lb
+  ]
+
+  network {
+    name = "AcmeLAN"
+    fixed_ip_v4 = "192.168.20.50"
+  }
+}
+
 # Set floating IP to the LB server
 resource "openstack_networking_floatingip_v2" "fip_1" {
   pool = "public"
   depends_on = [
     openstack_networking_router_v2.router_1,
-    openstack_compute_instance_v2.lb
+    openstack_compute_instance_v2.prom
   ]
 }
 
@@ -167,7 +211,7 @@ resource "openstack_compute_floatingip_associate_v2" "fip_1" {
   instance_id = openstack_compute_instance_v2.lb[0].id
   depends_on = [
     openstack_networking_floatingip_v2.fip_1,
-    openstack_compute_instance_v2.lb
+    openstack_compute_instance_v2.prom
   ]
 }
 
@@ -176,7 +220,7 @@ resource "openstack_networking_floatingip_v2" "fip_2" {
   pool = "public"
   depends_on = [
     openstack_networking_router_v2.router_1,
-    openstack_compute_instance_v2.ac
+    openstack_compute_instance_v2.prom
   ]
 }
 
@@ -185,7 +229,25 @@ resource "openstack_compute_floatingip_associate_v2" "fip_2" {
   instance_id = openstack_compute_instance_v2.ac[0].id
   depends_on = [
     openstack_networking_floatingip_v2.fip_2,
-    openstack_compute_instance_v2.ac
+    openstack_compute_instance_v2.prom
+  ]
+}
+
+# Set floating IP to the AC server
+resource "openstack_networking_floatingip_v2" "fip_3" {
+  pool = "public"
+  depends_on = [
+    openstack_networking_router_v2.router_1,
+    openstack_compute_instance_v2.prom
+  ]
+}
+
+resource "openstack_compute_floatingip_associate_v2" "fip_3" {
+  floating_ip = openstack_networking_floatingip_v2.fip_3.address
+  instance_id = openstack_compute_instance_v2.prom[0].id
+  depends_on = [
+    openstack_networking_floatingip_v2.fip_3,
+    openstack_compute_instance_v2.prom
   ]
 }
 
