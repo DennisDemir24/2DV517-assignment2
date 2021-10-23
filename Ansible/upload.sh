@@ -3,14 +3,13 @@
 # Uploads all files except *.secret and upload.sh in the CURRENT DIRECTORY to
 # the server directory ~/Ansible/. If this directory does not exist, it will be created.
 
+# Create these files and put your Ansible controller FIP and path/to/key.pem in them.
 ip="./ac_ip.secret"
 key="./bashkey.secret"
 
 server=$(cat "$ip")
 user='ubuntu'
 cwd=$(pwd)
-
-# Change this variable to use other keys:
 pem=$(cat "$key")
 
 # Where your .ssh directory is located:
