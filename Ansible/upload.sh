@@ -9,21 +9,14 @@ key="./bashkey.secret"
 
 server=$(cat "$ip")
 user='ubuntu'
-cwd=$(pwd)
 pem=$(cat "$key")
-
-# Where your .ssh directory is located:
-cd ~
-echo server
-echo pem
 
 # This will automatically fail if directory is already present. 
 ssh $user@$server -i "$pem" 'mkdir Ansible'
 
 # Ignores upload.sh and files ending in *.secret IF IN CURRENT DIR 
 # (do not put secrets in subfolders).
-echo "$cwd"
-for f in "$cwd"/*; do
+for f in $(pwd)/*; do
     if [ "${f: -9}" == "upload.sh" ] || [[ "${f}" == *.secret ]]; then
         echo "Skipping: $f"
     else
@@ -36,5 +29,3 @@ for f in "$cwd"/*; do
 	    fi
     fi
 done
-
-cd "$cwd"
