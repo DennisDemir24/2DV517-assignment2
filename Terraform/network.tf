@@ -30,7 +30,7 @@ resource "openstack_networking_router_interface_v2" "router_interface_1" {
 
 # Security groups
 resource "openstack_compute_secgroup_v2" "secgroup_1" {
-  name        = "SSH"
+  name        = "ssh"
   description = "SSH"
 
   rule {
@@ -42,15 +42,8 @@ resource "openstack_compute_secgroup_v2" "secgroup_1" {
 }
 
 resource "openstack_compute_secgroup_v2" "secgroup_2" {
-  name        = "SSHHTML"
-  description = "SSH and HTML"
-
-  rule {
-    from_port   = 22
-    to_port     = 22
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+  name        = "html"
+  description = "HTML"
 
   rule {
     from_port   = 80

@@ -12,7 +12,7 @@ resource "openstack_compute_instance_v2" "ac" {
   flavor_name = "c1-r05-d10"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
-  security_groups = [ "default", "SSH" ]
+  security_groups = [ "default", "ssh" ]
   count = 1
   user_data = data.template_file.ansible_data.rendered
 
@@ -25,22 +25,6 @@ resource "openstack_compute_instance_v2" "ac" {
     name = "AcmeLAN"
     fixed_ip_v4 = "192.168.20.10"
   }
-
-/*
-# This doesn't work
-  provisioner "remote-exec" {
-    inline = [
-      "sudo touch helloworld.md"
-    ]
-
-    connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = file(var.ssh_key_private)
-    host        = "${openstack_networking_floatingip_v2.fip_2.address}"
-    }
-  }
-  */
   
 }
 
@@ -51,8 +35,8 @@ resource "local_file" "inventory" {
     openstack_compute_floatingip_associate_v2.fip_3
   ]
   content = <<EOT
-[ac_server]
-ac ansible_host=${openstack_networking_floatingip_v2.fip_2.address}
+# [ac_server]
+# ac ansible_host=${openstack_networking_floatingip_v2.fip_2.address}
 
 [nginx]
 lb ansible_host=${openstack_compute_instance_v2.lb[0].access_ip_v4}
@@ -75,8 +59,8 @@ fs ansible_host=${openstack_compute_instance_v2.fs[0].access_ip_v4}
 prom ansible_host=${openstack_compute_instance_v2.fs[0].access_ip_v4}
 
 [all:vars]
-ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
-ansible_python_interpreter=/usr/bin/python3"
+# ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
+ansible_python_interpreter=/usr/bin/python3
   EOT
   # filename = "${openstack_compute_instance_v2.ac[0].access_ip_v4}:./etc/ansible/hosts"
   filename = "../Ansible/inventory"
@@ -89,7 +73,7 @@ resource "openstack_compute_instance_v2" "lb" {
   flavor_name = "c1-r05-d10"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
-  security_groups = [ "SSHHTML" ]
+  security_groups = [ "ssh", "html" ]
   count = 1
 
   depends_on = [
@@ -111,7 +95,7 @@ resource "openstack_compute_instance_v2" "wp" {
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 3
-  security_groups = [ "SSHHTML" ]
+  security_groups = [ "ssh", "html" ]
 
   depends_on = [
     openstack_networking_router_v2.router_1,
@@ -133,7 +117,7 @@ resource "openstack_compute_instance_v2" "db" {
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 2
-  security_groups = [ "SSH" ]
+  security_groups = [ "ssh" ]
 
   depends_on = [
     openstack_networking_router_v2.router_1,
@@ -154,7 +138,7 @@ resource "openstack_compute_instance_v2" "fs" {
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 1
-  security_groups = [ "SSH" ]
+  security_groups = [ "ssh" ]
 
   depends_on = [
     openstack_networking_router_v2.router_1
@@ -173,7 +157,7 @@ resource "openstack_compute_instance_v2" "prom" {
   flavor_name = "c1-r1-d10"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
-  security_groups = [ "SSHHTML" ]
+  security_groups = [ "ssh", "html" ]
   count = 1
 
   depends_on = [
