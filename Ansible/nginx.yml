@@ -29,7 +29,7 @@
         state: absent
 
   # Copying the new file in  
-    - name: Copy a new "ntp.conf" file into place, backing up the original if it differs from the copied version
+    - name: Copy a new "nginx.conf" file into place.
       ansible.builtin.copy:
         src: ./templates/nginx.conf
         dest: /etc/nginx/nginx.conf
