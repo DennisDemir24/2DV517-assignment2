@@ -9,7 +9,7 @@ data "template_file" "ansible_data" {
 resource "openstack_compute_instance_v2" "ac" {
   name      = "AcmeAC_${count.index}"
   image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r05-d10"
+  flavor_name = "c2-r2-d20"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   security_groups = [ "default", "ssh" ]
@@ -70,7 +70,7 @@ ansible_python_interpreter=/usr/bin/python3
 resource "openstack_compute_instance_v2" "lb" {
   name      = "AcmeLB_${count.index}"
   image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r05-d10"
+  flavor_name = "c1-r2-d10"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   security_groups = [ "ssh", "html" ]
@@ -113,7 +113,7 @@ resource "openstack_compute_instance_v2" "wp" {
 resource "openstack_compute_instance_v2" "db" {
   name      = "AcmeDB_${count.index}"
   image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r2-d10"
+  flavor_name = "c1-r2-d20"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 2
@@ -134,7 +134,7 @@ resource "openstack_compute_instance_v2" "db" {
 resource "openstack_compute_instance_v2" "fs" {
   name      = "AcmeFS_${count.index}"
   image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r2-d10"
+  flavor_name = "c1-r2-d40"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 1
