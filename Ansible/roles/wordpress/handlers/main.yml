@@ -1,0 +1,8 @@
+---
+# handlers file for roles/wordpress
+- name: restart nginx
+  service: name=nginx state=restarted
+  become: yes
+
+- name: restart php5-fpm
+  service: name=php5-fpm state=restarted
