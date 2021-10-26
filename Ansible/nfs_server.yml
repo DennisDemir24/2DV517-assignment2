@@ -1,5 +1,7 @@
 ---
 - hosts: fileserver
+  vars_files: 
+   - ./vars/all
   user: ubuntu
   become: yes
   tasks:

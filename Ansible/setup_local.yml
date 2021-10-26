@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  user: ubuntu
+  become: yes
+  tasks:
+    - name: run key script
+      ansible.builtin.command:
+        cmd: bash reg_key.sh

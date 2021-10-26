@@ -12,7 +12,7 @@ user='ubuntu'
 pem=$(cat "$key")
 
 # This will automatically fail if directory is already present. 
-ssh $user@$server -i "$pem" 'sudo mkdir Ansible'
+ssh $user@$server -i "$pem" 'mkdir Ansible'
 
 # Ignores upload.sh and files ending in *.secret IF IN CURRENT DIR 
 # (do not put secrets in subfolders).
@@ -34,11 +34,11 @@ done
 
 #Creating directories for clouds.yaml and .ssh key
 
-ssh $user@$server -i "$pem" 'sudo mkdir ./.ssh'
+ssh $user@$server -i "$pem" 'mkdir ./.ssh'
 echo "Creating .ssh directory"
 ssh $user@$server -i "$pem" 'mkdir ./.config'
 echo "Creating .config directory"
-ssh $user@$server -i "$pem" 'sudo mkdir ./.config/openstack'
+ssh $user@$server -i "$pem" 'mkdir ./.config/openstack'
 echo "Creating .config/openstack directory"
 
 # Uploading clouds.yaml to the right location

@@ -1,7 +1,7 @@
 ---
 - hosts: nginx
   vars_files: 
-   - ./vars/nginx
+   - ./vars/all
   user: ubuntu
   become: yes
   # Updating and upgrading all packages.
@@ -29,7 +29,7 @@
         state: absent
 
   # Copying the new file in  
-    - name: Copy a new "nginx.conf" file into place.
+    - name: Copy a new "ntp.conf" file into place, backing up the original if it differs from the copied version
       ansible.builtin.copy:
         src: ./templates/nginx.conf
         dest: /etc/nginx/nginx.conf
@@ -44,6 +44,15 @@
         dest: /etc/nginx/conf.d/loadbalancer.conf
       with_items:
         - { dest: loadbalancer.conf }
+      tags: nginx
+
+  # Copying template mysql_loadbalancer.conf file to the right location.
+    - name: Nginx sites-available file
+      ansible.builtin.copy:
+        src: ./templates/mysql_loadbalancer.conf
+        dest: /etc/nginx/conf.d/mysql_loadbalancer.conf
+      with_items:
+        - { dest: mysql_loadbalancer.conf }
       tags: nginx
 
   # Removing default file so that the new loadbalancer file takes presedence.

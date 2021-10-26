@@ -5,6 +5,14 @@ data "template_file" "ansible_data" {
   template = file("../cloud_init_ansible/ansible_machine.yaml")
 }
 
+data "template_file" "rest" {
+  template = file("../cloud_init_ansible/machines_all_init.yaml")
+}
+
+data "template_file" "db" {
+  template = file("../cloud_init_ansible/db_machines.yaml")
+}
+
 # Ansible control server(?)
 resource "openstack_compute_instance_v2" "ac" {
   name      = "AcmeAC_${count.index}"
@@ -75,6 +83,7 @@ resource "openstack_compute_instance_v2" "lb" {
   availability_zone = "Education"
   security_groups = [ "ssh", "html" ]
   count = 1
+  user_data = data.template_file.rest.rendered
 
   depends_on = [
     openstack_networking_router_v2.router_1,
@@ -96,6 +105,7 @@ resource "openstack_compute_instance_v2" "wp" {
   availability_zone = "Education"
   count = 3
   security_groups = [ "ssh", "html" ]
+  user_data = data.template_file.rest.rendered
 
   depends_on = [
     openstack_networking_router_v2.router_1,
@@ -117,7 +127,8 @@ resource "openstack_compute_instance_v2" "db" {
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 2
-  security_groups = [ "ssh" ]
+  security_groups = [ "ssh", "default" ]
+  user_data = data.template_file.db.rendered
 
   depends_on = [
     openstack_networking_router_v2.router_1,
@@ -138,7 +149,8 @@ resource "openstack_compute_instance_v2" "fs" {
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 1
-  security_groups = [ "ssh" ]
+  security_groups = [ "ssh", "default" ]
+  user_data = data.template_file.rest.rendered
 
   depends_on = [
     openstack_networking_router_v2.router_1
@@ -159,6 +171,7 @@ resource "openstack_compute_instance_v2" "prom" {
   availability_zone = "Education"
   security_groups = [ "ssh", "html" ]
   count = 1
+  user_data = data.template_file.rest.rendered
 
   depends_on = [
     openstack_networking_router_v2.router_1,
