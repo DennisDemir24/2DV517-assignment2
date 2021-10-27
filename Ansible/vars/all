@@ -19,3 +19,6 @@ migrate_db_import_path: ./templates/backup.sql
 master_db_server_hostname: 192.168.20.30
 slave_db_server_hostname: 192.168.20.31
 
+# Public host IP (Loadbalancer)
+
+host_ip: http://ipGoesHere

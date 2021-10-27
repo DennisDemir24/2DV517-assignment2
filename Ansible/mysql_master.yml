@@ -105,3 +105,15 @@
           name: "{{ migrate_db_name }}"
           state: import
           target: /tmp/backup.sql
+
+  # Running query to update site_url and home database options
+    - name: SQL query for site_URL and home options
+      become: true
+      community.mysql.mysql_query:
+        login_db: "{{ migrate_db_name }}"
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        query:
+        - UPDATE wordpress.wp_options SET option_value = '{{ host_ip }}' WHERE (option_id = '1');
+        - UPDATE wordpress.wp_options SET option_value = '{{ host_ip }}' WHERE (option_id = '2');
+        single_transaction: yes
