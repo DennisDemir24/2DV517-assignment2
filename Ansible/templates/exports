@@ -1,2 +1,2 @@
-/mnt/mysql 192.168.20.0/24/(rw,sync,no_subtree_check)
+/mnt/mysql 192.168.20.0/24(rw,sync,no_subtree_check)
 /mnt/wp 192.168.20.0/24(rw,sync,no_subtree_check)

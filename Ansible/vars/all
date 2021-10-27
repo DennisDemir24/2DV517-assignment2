@@ -4,7 +4,7 @@ cloud: openstack
 key_name: dd222gc_Keypair
 
 # The administrative password
-mysql_root_password: root
+mysql_root_password: inputYourPasswordHere
 
 # WordPress database settings
 migrate_db_user: wordpress

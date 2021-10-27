@@ -9,4 +9,6 @@ runcmd:
   - sudo add-apt-repository --yes --update ppa:ansible/ansible
   - sudo apt update
   - sudo apt install -y ansible
-  - sudo reboot
+  - sudo apt install mysql-server
+  - sudo apt install mysql-client
+  - sudo apt install python3-pymysql
