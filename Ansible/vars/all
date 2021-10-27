@@ -1,7 +1,7 @@
-# ALL
+# NETWORK
 # The parameter for cloud can be named differently depending on how your clouds.yaml look.
 cloud: openstack
-key_name: keypair_name
+key_name: dd222gc_Keypair
 
 # The administrative password
 mysql_root_password: root
@@ -14,7 +14,11 @@ migrate_db_password: wordpress
 # SQL dump of database which should be migrated
 migrate_db_import_path: ./templates/backup.sql
 
-# Hostname is the public IP of the NginX Loadbalancer... i think
+# Hostname is the private hostname(which is an IP)
 
-server_hostname: inputIpHere
+master_db_server_hostname: 192.168.20.30
+slave_db_server_hostname: 192.168.20.31
 
+# Public host IP (Loadbalancer)
+
+host_ip: http://ipGoesHere
