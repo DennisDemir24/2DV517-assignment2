@@ -47,6 +47,8 @@ Ssh into your Acme_AC (Ansble controller) server. Check <code>inventory</code> f
 
 Download clouds.yaml from Openstack and put it in ~/.config/openstack/clouds.yaml (create directory if it does not exist).
 
+Edit <code>upload.sh</code> vars with the path to your key file.
+
 Run
 
     bash upload.sh
@@ -68,6 +70,8 @@ You may get an error about accepting the fingerprints of all servers, answer <co
 Ping again, everything should now be green.
 
 ## Vars to set:
+upload.sh
+
 ansible.conf
 
 vars/all
