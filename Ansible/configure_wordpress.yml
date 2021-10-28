@@ -1,6 +1,0 @@
----
-- name: Configure wordpress.
-  hosts: localhost
-  become: yes
-  roles:
-   - wordpress
