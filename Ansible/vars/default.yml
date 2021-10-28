@@ -1,0 +1,14 @@
+---
+#System Settings
+php_modules: [ 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
+
+#MySQL Settings
+mysql_root_password: "rootpassword"
+mysql_db: "wordpress"
+mysql_user: "wordpress"
+mysql_password: "password"
+
+#HTTP Settings
+http_host: "fip" # Load balancer "FIP"
+http_conf: "fip.conf" # Load balancer "FIP.conf"
+http_port: "80"
