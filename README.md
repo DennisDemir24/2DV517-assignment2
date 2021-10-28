@@ -66,3 +66,10 @@ Ping all with Ansible:
 You may get an error about accepting the fingerprints of all servers, answer <code>yes</code> for each server (keep typing yes even if the terminal acts weird) until you are back at the default prompt ($).
 
 Ping again, everything should now be green.
+
+## Vars to set:
+ansible.conf
+
+vars/all
+
+vars/default

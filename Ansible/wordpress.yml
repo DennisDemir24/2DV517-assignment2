@@ -53,12 +53,12 @@
       tags: [ apache ]
 
   # MySQL Configuration
-    - name: Set the root password
-      mysql_user:
-        name: root
-        password: "{{ mysql_root_password }}"
-        login_unix_socket: /var/run/mysqld/mysqld.sock
-      tags: [ mysql, mysql-root ]
+    # - name: Set the root password
+    #   mysql_user:
+    #     name: root
+    #     password: "{{ mysql_root_password }}"
+    #     login_unix_socket: /var/run/mysqld/mysqld.sock
+    #   tags: [ mysql, mysql-root ]
 
     - name: Remove all anonymous user accounts
       mysql_user:
@@ -131,9 +131,25 @@
 
     - name: Set up wp-config
       template:
-        src: "files/wp-config.php.j2"
+        src: "templates/wp-config.php"
         dest: "/var/www/{{ http_host }}/wordpress/wp-config.php"
       tags: [ wordpress ]
+
+      # Create directory for db conf files
+    - name: Create dir wp-content
+      file:
+        path: /var/www/{{ http_host }}/wp-content
+        state: directory
+
+      # Copy db conf files
+    - name: Create db-config.php
+      copy: src=/home/ubuntu/Ansible/templates/db-config.php dest=/var/www/{{ http_host }}/db-config.php
+
+    - name: Copy db.php
+      copy: src=/home/ubuntu/Ansible/templates/db.php dest=/var/www/{{ http_host }}/wp-content/db.php
+
+    - name: copy wp-config.php
+      copy: src=/home/ubuntu/Ansible/templates/wp-config.php dest=/var/www/{{ http_host }}/wp-config.php
 
   handlers:
     - name: Reload Apache
