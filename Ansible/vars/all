@@ -1,10 +1,15 @@
-# NETWORK
+# ALL
 # The parameter for cloud can be named differently depending on how your clouds.yaml look.
-cloud: openstack(UPDATE WITH OWN PARAMETER)
-key_name: your_keypair.pem
+cloud: openstack
+# !!!CHANGE KEYPAIR!!!
+key_name: yourKeyPairNameHere
 
-# The administrative password(UPDATE WITH OWN PARAMETER)
-mysql_root_password: inputYourPasswordHere
+# The administrative password (!!!SET YOURSELF!!!)
+mysql_root_password: yourPasswordHere
+
+#Replication user settings (!!!SET YOURSELF!!!)
+repl_user_name: replica
+repl_user_pass: yourPasswordHere
 
 # WordPress database settings
 migrate_db_user: wordpress
@@ -19,6 +24,6 @@ migrate_db_import_path: ./templates/backup.sql
 master_db_server_hostname: 192.168.20.30
 slave_db_server_hostname: 192.168.20.31
 
-# Public host IP (Loadbalancer, UPDATE WITH FLOATING IP)
+# Public host IP (Loadbalancer)
 
-host_ip: http://ipGoesHere
+host_ip: http://194.47.176.50
