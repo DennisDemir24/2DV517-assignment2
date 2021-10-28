@@ -36,14 +36,13 @@ when you are ready.
 ## Ansible
     cd ../Ansible
 
-Add your ssh-key, this prevents "permission denied" errors.
+Change the parameters in the reg_key.sh to point to your own key and run it:
 
-    eval $(ssh-agent)
-    ssh-add -k ~/.ssh/yourkey.pem
+    bash reg_key.sh
 
 Ssh into your Acme_AC (Ansble controller) server. Check <code>inventory</code> for the ac server floating ip. Then exit to your local machine again. This is to accept fingerprint and add the server ip to known hosts.
 
-    ssh ubuntu@acfloatingIPhere
+    ssh ubuntu@acfloatingIPhere -i ~/path/to/ssh_key.pem
     exit
 
 Download clouds.yaml from Openstack and put it in ~/.config/openstack/clouds.yaml (create directory if it does not exist).
@@ -54,10 +53,9 @@ Run
 
 Ssh into the Ansible controller again.
 
-Add your ssh-key, this prevents "permission denied" errors.
+Add your ssh-key, this prevents "permission denied" errors by running the same reg_key bash but now on Ansible machine.
 
-    eval $(ssh-agent)
-    ssh-add -k ~/.ssh/yourkey.pem
+    bash reg_key.sh
 
 Edit <code>ansible.cfg</code> and <code>vars/all</code> and replace the placeholder values with your own. Your key should be in ~/.ssh/
 

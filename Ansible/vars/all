@@ -1,9 +1,9 @@
 # NETWORK
 # The parameter for cloud can be named differently depending on how your clouds.yaml look.
-cloud: openstack
-key_name: dd222gc_Keypair
+cloud: openstack(UPDATE WITH OWN PARAMETER)
+key_name: your_keypair.pem
 
-# The administrative password
+# The administrative password(UPDATE WITH OWN PARAMETER)
 mysql_root_password: inputYourPasswordHere
 
 # WordPress database settings
@@ -19,6 +19,6 @@ migrate_db_import_path: ./templates/backup.sql
 master_db_server_hostname: 192.168.20.30
 slave_db_server_hostname: 192.168.20.31
 
-# Public host IP (Loadbalancer)
+# Public host IP (Loadbalancer, UPDATE WITH FLOATING IP)
 
 host_ip: http://ipGoesHere
