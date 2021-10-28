@@ -54,6 +54,11 @@ Run
 
 Ssh into the Ansible controller again.
 
+Add your ssh-key, this prevents "permission denied" errors.
+
+    eval $(ssh-agent)
+    ssh-add -k ~/.ssh/yourkey.pem
+
 Edit <code>ansible.cfg</code> and <code>vars/all</code> and replace the placeholder values with your own. Your key should be in ~/.ssh/
 
 Ping all with Ansible:
