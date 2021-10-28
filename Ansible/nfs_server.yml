@@ -51,4 +51,4 @@
   # Allowing incoming traffic on port 2049 to entire private network.
     - name: Setting up UFW rule
       ansible.builtin.command:
-        cmd: sudo ufw allow from 192.168.2.0/24 to any port nfs
+        cmd: sudo ufw allow from 192.168.20.0/24 to any port nfs

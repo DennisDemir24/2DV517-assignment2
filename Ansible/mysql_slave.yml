@@ -138,6 +138,6 @@
   # Start the slave replication
     - name: Start the slave replication.
       mysql_replication:
-        mode: startslave
+        mode: startreplica
         login_user: root
         login_password: "{{ mysql_root_password }}"
