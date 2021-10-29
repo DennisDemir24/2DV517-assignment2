@@ -62,13 +62,27 @@
         proto: tcp
       tags: [ system ]
 
+  
+  # Create directory for db conf files
+    - name: Create dir wp-content
+      file:
+        path: /home/ubuntu/temp/
+        state: directory
+
+
+
   # WordPress Configuration
     - name: Download and unpack latest WordPress
       unarchive:
         src: https://wordpress.org/wordpress-5.4.7.tar.gz
-        dest: "/var/www/{{ http_host }}"
+        dest: /home/ubuntu/temp/
         remote_src: yes
       tags: [ wordpress ]
+
+  # Moving wordpress files to right location
+    - name: Move worpress files to right location
+      shell: |
+        cp -r /home/ubuntu/temp/wordpress/* /var/www/{{ http_host }}/
 
     - name: Set ownership
       file:
