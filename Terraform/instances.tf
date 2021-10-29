@@ -20,7 +20,7 @@ resource "openstack_compute_instance_v2" "ac" {
   flavor_name = "c2-r2-d20"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
-  security_groups = [ "default", "ssh" ]
+  security_groups = [ "ssh" ]
   count = 1
   user_data = data.template_file.ansible_data.rendered
 
@@ -97,7 +97,7 @@ resource "openstack_compute_instance_v2" "lb" {
   flavor_name = "c1-r2-d10"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
-  security_groups = [ "ssh", "html" ]
+  security_groups = [ "database", "ssh", "html" ]
   count = 1
   user_data = data.template_file.rest.rendered
 
@@ -120,7 +120,7 @@ resource "openstack_compute_instance_v2" "wp" {
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 3
-  security_groups = [ "ssh", "html" ]
+  security_groups = [ "ssh", "default" ]
   user_data = data.template_file.rest.rendered
 
   depends_on = [

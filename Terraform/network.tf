@@ -52,3 +52,15 @@ resource "openstack_compute_secgroup_v2" "secgroup_2" {
     cidr        = "0.0.0.0/0"
   }
 }
+
+resource "openstack_compute_secgroup_v2" "secgroup_3" {
+  name        = "database"
+  description = "DATABASE"
+
+  rule {
+    from_port   = 3306
+    to_port     = 33060
+    ip_protocol = "tcp"
+    cidr        = "192.168.20.0/24"
+  }
+}
