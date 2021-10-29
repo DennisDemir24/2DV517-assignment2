@@ -1,6 +1,7 @@
 # From this guide: https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-wordpress-with-lamp-on-ubuntu-18-04
 ---
 - hosts: wordpress
+  user: ubuntu
   become: true
   vars_files:
     - vars/default.yml
@@ -18,7 +19,7 @@
     - name: Install PHP and extensions.
       shell: |
         sudo apt -y install php7.4
-        sudo apt install php7.4-curl php7.4-gd php7.4-mbstring php7.4-xml php7.4-xmlrpc php7.4-soap php7.4-intl php7.4-zip php7.4-mysql
+        sudo apt -y install php7.4-curl php7.4-gd php7.4-mbstring php7.4-xml php7.4-xmlrpc php7.4-soap php7.4-intl php7.4-zip php7.4-mysql
 
 
   # Apache Configuration
@@ -67,7 +68,6 @@
         src: https://wordpress.org/wordpress-5.4.7.tar.gz
         dest: "/var/www/{{ http_host }}"
         remote_src: yes
-        creates: "/var/www/{{ http_host }}/wordpress"
       tags: [ wordpress ]
 
     - name: Set ownership
@@ -79,14 +79,6 @@
         group: www-data
       tags: [ wordpress ]
 
-    - name: Set permissions for directories
-      shell: "/usr/bin/find /var/www/{{ http_host }}/ -type d -exec chmod 750 {} \\;"
-      tags: [ wordpress ]
-
-    - name: Set permissions for files
-      shell: "/usr/bin/find /var/www/{{ http_host }}/ -type f -exec chmod 640 {} \\;"
-      tags: [ wordpress ]
-
     - name: Set up wp-config
       template:
         src: "templates/wp-config.php"
@@ -94,10 +86,10 @@
       tags: [ wordpress ]
 
       # Create directory for db conf files
-    - name: Create dir wp-content
-      file:
-        path: /var/www/{{ http_host }}/wp-content
-        state: directory
+    #- name: Create dir wp-content
+    #  file:
+    #    path: /var/www/{{ http_host }}/wp-content
+    #    state: directory
 
       # Copy db conf files
     - name: Create db-config.php
@@ -108,6 +100,12 @@
 
     - name: copy wp-config.php
       copy: src=/home/ubuntu/Ansible/templates/wp-config.php dest=/var/www/{{ http_host }}/wp-config.php
+
+    - name: Ensure directories are 0755
+      command: sudo find /var/www/{{ http_host }}/ -type d -exec chmod 0755 {} \;
+
+    - name: Ensure files are 0644
+      command: sudo find /var/www/{{ http_host }}/ -type f -exec chmod 0644 {} \;  
 
   handlers:
     - name: Reload Apache
