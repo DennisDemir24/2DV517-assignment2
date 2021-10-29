@@ -36,6 +36,22 @@ resource "openstack_compute_instance_v2" "ac" {
   
 }
 
+# Ansible ansible.cfg
+resource "local_file" "ansiblecfg" {
+
+  depends_on = [
+    openstack_compute_floatingip_associate_v2.fip_3
+  ]
+  content = <<EOT
+[defaults]
+inventory	= ./inventory
+remote_user = ubuntu
+private_key_file = ${var.ssh_key_private}
+  EOT
+  filename = "../Ansible/ansible.cfg"
+}
+
+# Ansible inventory
 # TODO: look into some form of loop to proof against other amounts of instances!
 resource "local_file" "inventory" {
 
