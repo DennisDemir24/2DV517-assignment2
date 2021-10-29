@@ -72,8 +72,6 @@ Ping again, everything should now be green.
 ## Vars to set:
 upload.sh
 
-ansible.conf
-
 vars/all
 
 vars/default
