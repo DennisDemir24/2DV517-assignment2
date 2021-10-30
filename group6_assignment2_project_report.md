@@ -136,7 +136,7 @@ made it possible to construct for example template configuration files for NginX
 load balancing, both internal (for MySQL read and write separation) as well as
 easy setup of a configuration for the routing of calls from the public web
 towards the WordPress servers([template files]
-(https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/templates).
+(https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/templates)).
 
 Initially the intention was to use a bastion jump-host (The NginX server) as a
 point of entry to the network and to run both Ansible and Terraform from remote
