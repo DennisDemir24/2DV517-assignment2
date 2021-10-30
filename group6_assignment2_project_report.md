@@ -72,6 +72,18 @@ Table . Basic setup
 | NginX internal and external loadbalancer | 1      |
 | Prometheus/Grafana monitoring server     | 1      |
 
+A repository and project board were set up on GitHub by one of the group members
+and shared with the rest of the participants in this project.
+
+As far as workflow was concerned the group agreed on working only with the
+master branch and having clear communication regarding uploads to said
+repository in a separate Discord channel that was set up for this groups work
+during the course.
+
+Weekly meetings was planned, initially during Wednesday but after two weeks
+moved to Monday to recap what had been done properly until the sprint review
+taking place on Tuesdays.
+
 Exploratory work and preparation
 --------------------------------
 
@@ -102,24 +114,47 @@ Workflow - trial, error and progress
 ------------------------------------
 
 Our initial plan had been to rely on Ansible for automation as it seemed to be
-capable of achieving everything we needed, so that’s the route we went at first.
-Although we made decent progress with Ansible, especially with guidance from the
-previously created bash script, we encountered some issues and eventually we let
-go of the idea of relying on Ansible ([old files from initial
-attempt](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/unused_files))
-and agreed to instead use Terraform for the OpenStack side of things with
-networks and instances ([Terraform
-folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Terraform))
-while using Ansible for the rest ([Ansible
-folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible)).  
-  
-For a while we wanted to have a bastion host as a point of entry to the network,
-as we had previously used jump machines in system administration courses and
-thought this could be useful. However we struggled a lot with making this work
-properly, and eventually decided to drop the idea before pouring too much time
-and effort into it that might be better used elsewhere.
+capable of achieving everything we needed. Although decent progress with Ansible
+was made, The work grinded slightly to a halt with the provisioning through
+Ansible due to some weaknesses in the modules for OpenStack provisioning. The
+decision was taken to lay aside Ansible as a provisioning tool for this
+assignment and explore Terraform as a tool for provisioning instead([old files
+from initial
+attempt](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/unused_files)).
+The provisioning through Terraform worked a lot better and the planned setup was
+quickly devised ([Terraform
+folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Terraform)).
+Ansible was left to configure the servers from an inventory file created through
+the Terraform provisioning ([Ansible
+folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible)).
 
-After making progress with Ansible and Terraform we started to consider the
+A decision at this point was taken to use a combination of dynamic configuration
+and hardcoded configuration through pre-created configuration files for various
+packages that would run on the virtual machines. This was achieved through
+pre-determining the internal IP addresses of the VM’s through Terraform. This
+made it possible to construct for example template configuration files for NginX
+load balancing, both internal (for MySQL read and write separation) as well as
+easy setup of a configuration for the routing of calls from the public web
+towards the WordPress servers([template files]
+https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/templates).
+
+Initially the intention was to use a bastion jump-host (The NginX server) as a
+point of entry to the network and to run both Ansible and Terraform from remote
+machines. However, we struggled with making this work properly, and eventually
+decided to drop the idea before pouring too much time and effort into it that
+might be better used elsewhere. Instead, a separate AC controller machine was
+constructed through Terraform, bringing the total of machines up to nine and
+finalizing the setup as can be seen in Figure 1.
+
+![Chart Description automatically generated with medium confidence](media/32d1a5d4d834e14034c16e3892782934.jpg)
+
+*Figure 1. General setup of machines through Terraform.*
+
+A Bash script was created to transport the Ansible folder and various template
+files and backup files to the Ansible Controller machine so one, after accessing
+it through SSH could run the rest of the configuration process.
+
+After making some progress with Ansible and Terraform we started to consider the
 monitoring aspect. For this we decided that we were going to use Prometheus
 ([folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/roles/prometheus)),
 and we also decided to use Grafana
@@ -128,8 +163,6 @@ alongside it to present the data from Prometheus. Although we didn’t
 particularly have experience with monitoring, we had been introduced to
 Prometheus in a previous course and therefore felt that it was a good tool to
 choose since we had some sort of starting point for it.
-
-![Chart Description automatically generated with medium confidence](media/32d1a5d4d834e14034c16e3892782934.jpg)
 
 Patterns
 --------
