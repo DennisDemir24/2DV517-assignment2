@@ -36,60 +36,6 @@ resource "openstack_compute_instance_v2" "ac" {
   
 }
 
-# Ansible ansible.cfg
-resource "local_file" "ansiblecfg" {
-
-  depends_on = [
-    openstack_compute_floatingip_associate_v2.fip_3
-  ]
-  content = <<EOT
-[defaults]
-inventory	= ./inventory
-remote_user = ubuntu
-private_key_file = ${var.ssh_key_private}
-  EOT
-  filename = "../Ansible/ansible.cfg"
-}
-
-# Ansible inventory
-# TODO: look into some form of loop to proof against other amounts of instances!
-resource "local_file" "inventory" {
-
-  depends_on = [
-    openstack_compute_floatingip_associate_v2.fip_3
-  ]
-  content = <<EOT
-# [ac_server]
-# ac ansible_host=${openstack_networking_floatingip_v2.fip_2.address}
-
-[nginx]
-lb ansible_host=${openstack_compute_instance_v2.lb[0].access_ip_v4}
-  
-[wordpress]
-wp1 ansible_host=${openstack_compute_instance_v2.wp[0].access_ip_v4}
-wp2 ansible_host=${openstack_compute_instance_v2.wp[1].access_ip_v4}
-wp3 ansible_host=${openstack_compute_instance_v2.wp[2].access_ip_v4}
-
-[databaseMS]
-db1 ansible_host=${openstack_compute_instance_v2.db[0].access_ip_v4}
-
-[databaseSL]
-db2 ansible_host=${openstack_compute_instance_v2.db[1].access_ip_v4}
-
-[fileserver]
-fs ansible_host=${openstack_compute_instance_v2.fs[0].access_ip_v4}
-
-[prometheus]
-prom ansible_host=${openstack_compute_instance_v2.fs[0].access_ip_v4}
-
-[all:vars]
-# ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@${openstack_networking_floatingip_v2.fip_2.address}"'
-ansible_python_interpreter=/usr/bin/python3
-  EOT
-  # filename = "${openstack_compute_instance_v2.ac[0].access_ip_v4}:./etc/ansible/hosts"
-  filename = "../Ansible/inventory"
-}
-
 # Load balancer (?)
 resource "openstack_compute_instance_v2" "lb" {
   name      = "AcmeLB_${count.index}"
@@ -115,12 +61,12 @@ resource "openstack_compute_instance_v2" "lb" {
 # 3 WP servers
 resource "openstack_compute_instance_v2" "wp" {
   name      = "AcmeWP_${count.index}"
-  image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r2-d20"
+  image_id  = "dec4c641-2949-4857-b31f-822a1567e233"
+  flavor_name = "c1-r4-d40"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 3
-  security_groups = [ "ssh", "default" ]
+  security_groups = [ "ssh", "default", "html" ]
   user_data = data.template_file.rest.rendered
 
   depends_on = [
@@ -139,7 +85,7 @@ resource "openstack_compute_instance_v2" "wp" {
 resource "openstack_compute_instance_v2" "db" {
   name      = "AcmeDB_${count.index}"
   image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r2-d20"
+  flavor_name = "c1-r4-d40"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 2
@@ -161,7 +107,7 @@ resource "openstack_compute_instance_v2" "db" {
 resource "openstack_compute_instance_v2" "fs" {
   name      = "AcmeFS_${count.index}"
   image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
-  flavor_name = "c1-r2-d40"
+  flavor_name = "c1-r4-d40"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"
   count = 1

@@ -10,6 +10,13 @@ Terraform installed locally. Openstack cli configured with the RC file from Open
 
 git clone this repo to your ~ directory.
 
+Put the provided wordpress_files.tar.gz in Ansible/site_files/
+
+Run 
+
+    tar -xf acme_wordpress_files.tar.gz
+    gunzip acme_wordpress_files.tar.gz
+
 ## Terraform
     cd Terraform
 
