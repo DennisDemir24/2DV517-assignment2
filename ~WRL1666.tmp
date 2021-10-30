@@ -10,7 +10,7 @@ Faculty of Technology – Department of Computer Science
 
 ![](media/6feca2c8054bb5f2891521af279d80c9.png)
 
-**Students:**
+Students:
 
 Tomas Marx-Raacz von Hidvég (tendn09)
 
@@ -19,7 +19,7 @@ Susanna Persson (sp222xw)
 Dennis Demir (dd222gc)  
 Julia Perlkvist (jp223es)
 
-**Group: 6**
+Group: 6
 
 INTRODUCTION
 ============
@@ -38,9 +38,11 @@ The repository for the project can be found on the following address:
 
 And the Video presentation of the setup can be found on the following address:
 
-1.  THE OVERVIEW
+THE WORK
+========
 
-    1.  The initial planning
+The initial planning
+--------------------
 
 Now after having the initial meeting with the group, it became apparent that
 none of us had experience with working with any of the automation tools, except
@@ -55,11 +57,12 @@ undertaken wholly through Ansible.
 As for the general structure of the setup the choice was taken to go for a
 traditional VM setup instead of a container setup through Kubernetes due to the
 limited prior experience the group had of automation tools. This decision was to
-lower the risk of the task becoming too overwhelming. The setup was divided into
-a network, subnet and router followed by eight virtual machines as seen in Table
-1.
+lower the risk of the task becoming too overwhelming.
 
-*Table 1 . Basic setup*
+The above-mentioned setup was divided into a network, subnet and router followed
+by eight virtual machines as seen in Table 1.
+
+Table . Basic setup
 
 | VM                                       | Amount |
 |------------------------------------------|--------|
@@ -133,7 +136,7 @@ made it possible to construct for example template configuration files for NginX
 load balancing, both internal (for MySQL read and write separation) as well as
 easy setup of a configuration for the routing of calls from the public web
 towards the WordPress
-servers([config](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/templates)).
+servers(https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/templates).
 
 Initially the intention was to use a bastion jump-host (The NginX server) as a
 point of entry to the network and to run both Ansible and Terraform from remote
@@ -149,99 +152,20 @@ finalizing the setup as can be seen in Figure 1.
 
 A Bash script was created to transport the Ansible folder and various template
 files and backup files to the Ansible Controller machine so one, after accessing
-it through SSH could run the rest of the configuration process([Bash
-script](https://github.com/DennisDemir24/2DV517-assignment2/blob/main/Ansible/upload.sh)).
+it through SSH could run the rest of the configuration process.
 
 After making some progress with Ansible and Terraform we started to consider the
 monitoring aspect. For this we decided that we were going to use Prometheus
-([Prometheus](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/roles/prometheus)),
+([folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/roles/prometheus)),
 and we also decided to use Grafana
-([Grafana](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/roles/grafana))
-alongside it to present the data from Prometheus. None of the group members had
-any real experience with said applications but it had been briefly run through
-in a previous course and as such it became an obvious choice.
-
-When researching the Prometheus/Grafana bundle the Node Exporter
-tool(NodeExporter) was also included into the mix to act as a metric collector
-of machine metrics for Prometheus.
-
-1.  SPECIFIC AUTOMATION TOOLS AND WHAT PARTS THEY PLAY
-
-    1.  Bash scripts
-
-Bash scripts, being a very early take on automation still plays a part in this
-project. In this case it was the ad-hoc solution to the otherwise dreary process
-of moving everything needed for Ansible to the ansible controller VM. What it
-does is loop through the files in the Ansible directory and send everything that
-is not marked “.secret” to the Ansible VM.
-
-Terraform
----------
-
-Terraform was used for what it was supposed to, to provision the OpenStack VMs,
-network, subnet, router, and security group as well as assigning said security
-groups to the individual servers through the module for this cloud.
-
-Furthermore, the provisioning was configurated to create an inventory file for
-Ansible to use for the configuration of the individual servers as well as the
-ansible.cfg to replicate some parameters that the individual administrator needs
-to input into a terraform.tfvars file.
-
-Other configurations files were also created and put into the Ansible folder
-this way including various vars files so that an administrator would have to
-change as little as possible.
-
-Some preinstallations of needed packages was made through including cloud-init
-([cloud-init](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/cloud_init_ansible))
-scripts with the terraforming, especially for the Ansible controller that had
-various dependencies to be able to run both Ansible and some of its modules
-necessary for this project. Other general cloud-init scripts was also added into
-the mix for databases and the rest of the machines to preinstall some
-dependencies as well as updating and upgrading packages during spawning instead
-of doing it during configuration. This last effort was done so that the ansible
-configurations wouldn´t take so long to finish once they ran the same checks for
-updates.
-
-Ansible
--------
-
-Now Ansible is the real workhorse in this project, and by far the one that
-needed the most research. Using a combination of dynamically created variables
-from terraform as well as, as mentioned previously, pre-constructed conf files
-of some variables that will never change, for example private network IP
-addresses of hosts, these playbooks were designed to configure everything that
-was needed to have the services running on the VMs.
-
-### NginX Load balancer
-
-The NginX load balancer was created through installing dependencies, utilizing
-pre-constructed .conf files and placing them in the right locations as well as
-starting the service. This was made possible by prior legwork done in terraform
-with the fixed IP addresses internally. As NginX only deals with this type of
-proxy commands it was a decently easy task to setup the HTTP load balancing
-towards WordPress servers as well as the internal TCP stream of the
-communication between the WordPress servers and the MySQL servers (port 33060
-was pointed towards the master, 3306 divided between master and slave).
-
-### NFS File sharing
-
-This was our interpretation of a location where administrators could upload
-files. This was a very straight forward installation of needed dependencies as
-well as inclusion of a preconfigured exports file that tells the program which
-IPs and what permissions said IPs would have towards the shared folders. The
-NFS-commons package also needed to be installed on all servers needed to access
-said files or in any way needed persistent storage for backups (MySQL and
-WordPress servers) as well as directories mounted that.
-
-In its current form administrators can not upload to it, but the filesharing is
-done. However, the infrastructure could for example be expanded with an FTP
-server on this specific VM with proxy through the NginX that was presented in
-section 3.3.1.
-
-### MySQL Master/Slave setup
+([folder](https://github.com/DennisDemir24/2DV517-assignment2/tree/main/Ansible/roles/grafana))
+alongside it to present the data from Prometheus. Although we didn’t
+particularly have experience with monitoring, we had been introduced to
+Prometheus in a previous course and therefore felt that it was a good tool to
+choose since we had some sort of starting point for it.
 
 Patterns
-========
+--------
 
 Immutable server
 ----------------
@@ -265,9 +189,3 @@ Bibliography
 [1] K. Morris, *Infrastructure as Code*, 2nd ed. O'Reilly Media, Inc. 2020.
 
 [2] ...
-
-[X] <https://github.com/prometheus/node_exporter>
-
-[X] <https://grafana.com/>
-
-[X] https://prometheus.io/
