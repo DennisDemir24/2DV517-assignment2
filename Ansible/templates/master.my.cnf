@@ -2,7 +2,12 @@
 user        = root
 password    = {{ mysql_root_password }}
 
+
+
 [mysqld]
+
+bind-address           = 192.168.20.30
+mysqlx-bind-address    = 127.0.0.1
 
 datadir = /var/lib/mysql
 

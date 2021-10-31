@@ -23,22 +23,37 @@
       ansible.builtin.command:
         cmd: sudo mkdir -p /mnt/shared_folder
 
+ # Copying a file with configuration parameters into MySQL server so that it is read in
+    - name: Copy .my.cnf file with root password credentials and config to second location
+      become: true
+      become_user: root
+      template: src=./templates/master.my.cnf dest=/root/.my.cnf owner=root mode=0600
+  # Removing old cnf files
+    - name: Remove legacy cnf files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+  #        - /etc/my.cnf
+  #        - /my.cnf
+  #       - /.my.cnf
+  #        - /etc/my.cnf
+          - /etc/mysql/mysql.conf.d/mysqld.cnf
+
+  # Copying a file with configuration parameters into MySQL server so that it is read in
+    - name: Copy .my.cnf file with root password credentials and config to second location
+      become: true
+      become_user: root
+      template: src=./templates/mysqld.cnf dest=/etc/mysql/mysql.conf.d/mysqld.cnf owner=root mode=0600
+
 # Mounting folder to NFS server MySQL version
     - name:
       ansible.builtin.command:
         cmd: sudo mount 192.168.20.40:/mnt/mysql /mnt/shared_folder
-
-  # Copying a file with configuration parameters into MySQL server so that it is read in
-    - name: Copy .my.cnf file with root password credentials
-      become: true
-      become_user: root
-      template: src=./templates/master.my.cnf dest=/root/.my.cnf owner=root mode=0600
-
-  #Starting the service.
-    - name: Start the MySQL service
-      action: service name=mysql state=started
-
-  # Setting root parameters
+      notify: 
+        - start mysql
+      
+# Setting root parameters
     - name: Set root user password
       become: true
       become_user: root
@@ -53,6 +68,9 @@
         - 127.0.0.1
         - ::1
         - localhost
+      notify: 
+        - restart mysql
+
 
   # Removing standard anonymous users and test databases   
     - name: Removes all anonymous user accounts
@@ -74,13 +92,17 @@
         - 127.0.0.1
         - ::1
         - localhost
+      notify: 
+        - restart mysql
+
   # Creating wordpress users and databases
     - name: Create mysql user
       become: true
       mysql_user:
         name: "{{ migrate_db_user }}"
         password: "{{ migrate_db_password }}"
-        priv: "*.*:ALL"
+        host: "%"
+        priv: "*.*:ALL,GRANT"
 
     - name: Create mysql database
       become: true
@@ -106,6 +128,19 @@
           state: import
           target: /tmp/backup.sql
 
+  # Create REPLICATION User
+    - name: Create Replication user on Master server
+      mysql_user:
+        name: "{{ repl_user_name }}"
+        host: "%"
+        password: "{{ repl_user_pass }}"
+        priv: "*.*:ALL,GRANT"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+      notify: 
+        - restart mysql
+
   # Running query to update site_url and home database options
     - name: SQL query for site_URL and home options
       become: true
@@ -116,19 +151,32 @@
         query:
         - UPDATE wordpress.wp_options SET option_value = '{{ host_ip }}' WHERE (option_id = '1');
         - UPDATE wordpress.wp_options SET option_value = '{{ host_ip }}' WHERE (option_id = '2');
-        - SET @@GLOBAL.ENFORCE_GTID_CONSISTENCY = ON;
-        - SET @@GLOBAL.GTID_MODE = OFF_PERMISSIVE;
-        - SET @@GLOBAL.GTID_MODE = ON_PERMISSIVE;
-        - SET @@GLOBAL.GTID_MODE = ON;
         single_transaction: no
+      notify: 
+        - restart mysql
 
-  # Create REPLICATION User
-    - name: Create Replication user on Master server
-      mysql_user:
-        name: "{{ repl_user_name }}"
-        host: "%"
-        password: "{{ repl_user_pass }}"
-        priv: "*.*:REPLICATION SLAVE"
-        state: present
+  # Running query to update site_url and home database options
+    - name: SQL query for site_URL and home options
+      become: true
+      community.mysql.mysql_query:
         login_user: root
         login_password: "{{ mysql_root_password }}"
+        query:
+        - GRANT ALL PRIVILEGES ON wordpress.* TO '{{ migrate_db_user }}'@'%';
+        - GRANT ALL PRIVILEGES ON wordpress.* TO '{{ repl_user_name }}'@'%';
+        - flush privileges;
+        single_transaction: no
+      notify: 
+        - restart mysql
+
+
+  handlers:
+    - name: start mysql
+      service: name=mysql
+               enabled=yes
+               state=started
+
+    - name: restart mysql
+      service: name=mysql
+               enabled=yes
+               state=restarted

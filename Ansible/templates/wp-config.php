@@ -29,10 +29,10 @@ define('DB_USER', 'wordpress');
 define('DB_PASSWORD', 'wordpress');
 
 /** MySQL WRITE hostname */
-define('DB_HOST', '192.168.20.11:33060');
+define('DB_HOST', '192.168.20.30');
 
 /** MySQL READ hostname */
-define('DB_READ', '192.168.20.11:3306');
+define('DB_READ', '192.168.20.31' );
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
