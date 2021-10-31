@@ -13,6 +13,10 @@ data "template_file" "db" {
   template = file("../cloud_init_ansible/db_machines.yaml")
 }
 
+data "template_file" "wp" {
+  template = file("../cloud_init_ansible/wp_machines.yaml")
+}
+
 # Ansible control server(?)
 resource "openstack_compute_instance_v2" "ac" {
   name      = "AcmeAC_${count.index}"
@@ -67,7 +71,7 @@ resource "openstack_compute_instance_v2" "wp" {
   availability_zone = "Education"
   count = 3
   security_groups = [ "ssh", "default", "html" ]
-  user_data = data.template_file.rest.rendered
+  user_data = data.template_file.wp.rendered
 
   depends_on = [
     openstack_networking_router_v2.router_1,
