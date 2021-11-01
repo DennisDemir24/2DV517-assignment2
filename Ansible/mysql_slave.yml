@@ -151,6 +151,7 @@
         query:
         - UPDATE wordpress.wp_options SET option_value = '{{ host_ip }}' WHERE (option_id = '1');
         - UPDATE wordpress.wp_options SET option_value = '{{ host_ip }}' WHERE (option_id = '2');
+        - UPDATE wordpress.wp_posts SET guid = REPLACE(guid, 'http://acme.example.org', '{{ host_ip }}') WHERE guid LIKE('http://acme.example.org/%');
         single_transaction: no
 
 # Running query to update site_url and home database options
