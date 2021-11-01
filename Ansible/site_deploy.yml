@@ -3,3 +3,4 @@
 - import_playbook: nfs_server.yml
 - import_playbook: mysql_master.yml
 - import_playbook: mysql_slave.yml
+- import_playbook: wordpress.yml

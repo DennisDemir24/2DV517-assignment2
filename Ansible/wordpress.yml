@@ -9,7 +9,7 @@
   tasks:
     - name: Wait until the lock file is removed
       wait_for:
-        path: name/of/the/lock/file
+        path: /var/lib/dpkg/lock-frontend
         state: absent
 
     - name: Install prerequisites
