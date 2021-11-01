@@ -65,7 +65,8 @@ resource "openstack_compute_instance_v2" "lb" {
 # 3 WP servers
 resource "openstack_compute_instance_v2" "wp" {
   name      = "AcmeWP_${count.index}"
-  image_id  = "dec4c641-2949-4857-b31f-822a1567e233"
+  #image_id  = "dec4c641-2949-4857-b31f-822a1567e233"
+  image_id  = "ca4bec1a-ac25-434f-b14c-ad8078ccf39f"
   flavor_name = "c1-r4-d40"
   key_pair  = var.openstack_keypair_name
   availability_zone = "Education"

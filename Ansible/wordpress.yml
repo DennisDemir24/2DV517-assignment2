@@ -13,13 +13,13 @@
 
     - name: Install LAMP Packages
       apt: name={{ item }} update_cache=yes state=latest
-      loop: [ 'apache2', 'libapache2-mod-php' ]
+      loop: [ 'apache2', 'libapache2-mod-php7.4' ]
       tags: [ system ]
 
     - name: Install PHP and extensions.
       shell: |
-        sudo apt -y install php7.0
-        sudo apt -y install php7.0-curl php7.0-gd php7.0-mbstring php7.0-xml php7.0-xmlrpc php7.0-soap php7.0-intl php7.0-zip php7.0-mysql
+        sudo apt -y install php7.4
+        sudo apt -y install php7.4-curl php7.4-gd php7.4-mbstring php7.4-xml php7.4-xmlrpc php7.4-soap php7.4-intl php7.4-zip php7.4-mysql
 
 
   # Apache Configuration
