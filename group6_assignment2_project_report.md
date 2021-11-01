@@ -253,7 +253,9 @@ ACME wants monitoring of their new site, and this should include 1) a visual ove
 
 ## People who helped us
 
-Fredrik Ljungner
+Daniel Johansson, Group 3
+Caesar Lennartsson and Fredrik Ljungner, Group 4
+Delfi Sehidic, Group 7
 
 ### 
 
