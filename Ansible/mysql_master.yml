@@ -4,13 +4,8 @@
     - ./vars/all
   user: ubuntu
   become: yes
-    # Wait for dpkg lock to be absent
+  
   tasks:
-    - name: Wait until the lock file is removed
-      wait_for:
-        path: /var/lib/dpkg/lock-frontend
-        state: absent
-
 #Installing MySQL and dependencies
     - name: Install required software
       apt:
