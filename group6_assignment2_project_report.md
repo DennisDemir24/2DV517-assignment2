@@ -240,6 +240,19 @@ section 3.3.1.
 
 ### MySQL Master/Slave setup
 
+## Theoretical considerations
+ACME had a list of requirements of their new solution. Here we list these and how we intended to handle the requirements.
+### Scalability
+ACME wanted at least 3 instances of the web server but also to easily be able to add more. This extends to the database which should be split into a master-slave replication which would also enable dynamic scaling by increasing the number of database servers.
+
+### File server
+If possible, a separate file server should be used for administrator files.
+
+### Monitoring
+ACME wants monitoring of their new site, and this should include 1) a visual overview and 2) an alarm if something unexpected happens, such as a server going down.
+
+### 
+
 Patterns
 ========
 
@@ -250,9 +263,12 @@ Immutable server, as described by Kief Morris [1], is where a server’s
 configuration is never changed, but rather new versions are created to replace
 old versions. This avoids potential risks of changing running servers, while
 also allowing you to make sure that the new server works as intended before
-removing the previous version. This pattern requires strong automation, but
-since we are overall focusing a lot on automation in this task this should not
-be a problem.
+removing the previous version. This pattern requires strong automation. 
+
+It has been a goal throughout the project to work towards absolute automation, although we have not succeeded. Our original vision was one command to build the entire infrastructure and deploy the site with all accessory features such as databases and file server. We have consistently worked with automating everything that we do in a way that enables us to tear down and rebuild the latest configuration at any time. We have built scripts from the start, starting with bash scripts for  such minimal tasks as uploading the Ansible playbooks automatically and registering the ssh keys on the Ansible Control server.
+
+
+
 
 Push server configuration
 -------------------------
