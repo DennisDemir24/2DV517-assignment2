@@ -250,6 +250,7 @@ If possible, a separate file server should be used for administrator files.
 
 ### Monitoring
 ACME wants monitoring of their new site, and this should include 1) a visual overview and 2) an alarm if something unexpected happens, such as a server going down.
+For monitoring we used Prometheus and for the visual graphs we used Grafana. We used metrics to measure if a instance goes down, and also CPU usage.
 
 ## People who helped us
 
