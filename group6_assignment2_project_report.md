@@ -243,13 +243,17 @@ section 3.3.1.
 ## Theoretical considerations
 ACME had a list of requirements of their new solution. Here we list these and how we intended to handle the requirements.
 ### Scalability
-ACME wanted at least 3 instances of the web server but also to easily be able to add more. This extends to the database which should be split into a master-slave replication which would also enable dynamic scaling by increasing the number of database servers.
+ACME wanted at least 3 instances of the web server but also to easily be able to add more. This extends to the database which should be split into a master-slave replication which would also enable dynamic scaling by increasing the number of database servers. To achieve this we envisioned an infrastructure as code solution where Terraform builds the instances that are defined in code. To add or remove instances of a specific type, we only change the number of that type of resource in the code. Infrastructure as Code also allows for easy deployment and re-deployment of instances. Also connected to scaling is the use of Ansible as server configuration tool. Ansible deploys configurations on multiple instances at once regardless of how many of a specific resource there is. With Terraform and Ansible in unison we achieve an automated process where we can setup and (if needed) destroy and setup again the entire infrastructure up to the content of Acme Corporation's website, back to the latest backup.
 
 ### File server
 If possible, a separate file server should be used for administrator files.
 
 ### Monitoring
 ACME wants monitoring of their new site, and this should include 1) a visual overview and 2) an alarm if something unexpected happens, such as a server going down.
+
+## People who helped us
+
+Fredrik Ljungner
 
 ### 
 
